@@ -1,0 +1,36 @@
+{
+  "name": "@repo/backend",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf out",
+    "format": "prettier --cache --cache-location out/prettier --check src",
+    "format:fix": "prettier --cache --cache-location out/prettier src --fix --write",
+    "format:watch": "nodemon --watch 'src/' --ext ts,js,json --exec 'prettier --cache --cache-location out/prettier --write src'",
+    "lint": "eslint './src/**/*.ts'",
+    "lint:watch": "nodemon --watch 'src/' --ext ts,js,json --exec 'npm run lint -- --fix'",
+    "test": "node --test-reporter=spec --test 'src/**/*.spec.ts'",
+    "test:watch": "node --test-reporter=spec --watch --test 'src/**/*.spec.ts'",
+    "test:cover": "c8 --reporter=text --all --src=src --report-dir=out/coverage npm test",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "npm run typecheck -- --watch"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/chance": "^1.1.7",
+    "@types/node": "^24.10.1",
+    "c8": "^10.1.3",
+    "chance": "^1.1.13",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4"
+  },
+  "dependencies": {
+    "tslib": "^2.8.1"
+  }
+}
