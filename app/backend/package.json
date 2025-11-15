@@ -15,7 +15,9 @@
     "test:watch": "node --test-reporter=spec --watch --test 'src/**/*.spec.ts'",
     "test:cover": "c8 --reporter=text --all --src=src --report-dir=out/coverage npm test",
     "typecheck": "tsc --noEmit",
-    "typecheck:watch": "npm run typecheck -- --watch"
+    "typecheck:watch": "npm run typecheck -- --watch",
+    "start": "node src/app.ts",
+    "dev": "node --watch-path './src' src/app.ts | pino-pretty"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -26,11 +28,14 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "nodemon": "^3.1.11",
+    "pino-pretty": "^13.1.2",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.4"
   },
   "dependencies": {
+    "@fastify/cors": "^11.1.0",
+    "fastify": "^5.6.2",
     "tslib": "^2.8.1"
   }
 }
