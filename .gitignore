@@ -1,0 +1,10 @@
+### Node ###
+node_modules/
+out/
+*.tsbuildinfo
+.eslintcache
+
+
+### macOS ###
+.DS_Store
+.vscode

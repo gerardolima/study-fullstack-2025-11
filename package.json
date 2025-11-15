@@ -1,0 +1,24 @@
+{
+  "name": "study-fullstack-2025-11",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Study for Fullstack 2025-11",
+  "author": "https://github.com/gerardolima",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gerardolima/study-fullstack-2025-11.git"
+  },
+  "engines": {
+    "node": ">=24",
+    "npm": ">=11"
+  },
+  "scripts": {
+  },
+  "workspaces": [
+    "lib/*",
+    "app/*"
+  ],
+  "devDependencies": {
+  }
+}
