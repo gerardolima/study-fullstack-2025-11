@@ -13,12 +13,13 @@
     "node": ">=24",
     "npm": ">=11"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "workspaces": [
     "lib/*",
     "app/*"
   ],
-  "devDependencies": {
+  "dependencies": {
+    "fastify-type-provider-zod": "^6.1.0",
+    "zod": "^4.1.12"
   }
 }
