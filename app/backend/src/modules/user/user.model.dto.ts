@@ -44,6 +44,9 @@ export const UserPostSchema = {
 } satisfies FastifySchema
 
 export const UserPatchSchema = {
+  params: z.object({
+    username: z.string(),
+  }),
   body: z.object({
     firstName: z.string().optional(),
     lastName: z.string().optional(),

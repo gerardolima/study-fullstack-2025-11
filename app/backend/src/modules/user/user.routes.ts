@@ -66,8 +66,8 @@ export const userRoutes = (app: FastifyInstance, _opt: RouteShorthandOptions) =>
     url: '/:username',
     schema: UserPatchSchema,
     handler: (req, reply) => {
-      const {username} = req.params as any
-      const {firstName, lastName, status} = req.body as any
+      const {username} = req.params
+      const {firstName, lastName, status} = req.body
 
       const updatedUser = userService.update(username, {firstName, lastName, status})
       if (!updatedUser) {

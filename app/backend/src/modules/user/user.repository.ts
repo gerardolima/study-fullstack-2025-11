@@ -1,5 +1,3 @@
-/** In memory user repository for managing user data. */
-
 import {UsernameExistsError} from './user.error.ts'
 import {type User, type UserCreatePayload, type UserUpdatePayload} from './user.model.ts'
 
@@ -51,11 +49,22 @@ export function update(username: string, data: UserUpdatePayload): User | undefi
     return undefined
   }
 
-  Object.assign(user, data, {lastUpdateTime: new Date().toISOString()})
+  if (data.firstName !== undefined) user.firstName = data.firstName
+  if (data.lastName !== undefined) user.lastName = data.lastName
+  if (data.status !== undefined) user.status = data.status
+  if (data.loginsCounter !== undefined) user.loginsCounter = data.loginsCounter
+
+  user.lastUpdateTime = new Date().toISOString()
+
   return structuredClone(user)
 }
 
 /** Removes a user by username. */
 export function remove(username: string): boolean {
   return store.delete(username)
+}
+
+/** Removes all users. */
+export function clearAll(): void {
+  store.clear()
 }
