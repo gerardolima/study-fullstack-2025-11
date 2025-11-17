@@ -15,22 +15,26 @@ const UserDto = z.object({
   lastUpdateTime: z.string(),
 })
 
-export const UserGetAllSchema = {
-  response: {
-    200: z.array(UserDto),
-  },
-} satisfies FastifySchema
+// /api/users
+// ----------------------------------------------------------------------------
 
-export const UserGetOneSchema = {
-  params: z.object({
-    username: z.string(),
+/** schema for: GET /api/users */
+export const UserGetAllSchema = {
+  querystring: z.object({
+    pageCurrent: z.coerce.number().int().positive().default(1),
+    pageSize: z.coerce.number().int().positive().default(6),
   }),
   response: {
-    200: UserDto,
-    404: GeneralMessageDto,
+    200: z.object({
+      list: z.array(UserDto),
+      pageCurrent: z.number(),
+      pageSize: z.number(),
+      pageCount: z.number(),
+    }),
   },
 } satisfies FastifySchema
 
+/** schema for: POST /api/users */
 export const UserPostSchema = {
   body: z.object({
     username: z.string(),
@@ -43,14 +47,13 @@ export const UserPostSchema = {
   },
 } satisfies FastifySchema
 
-export const UserPatchSchema = {
+// //api/users/:username
+// ----------------------------------------------------------------------------
+
+/** schema for: GET /api/users/:username */
+export const UserGetOneSchema = {
   params: z.object({
     username: z.string(),
-  }),
-  body: z.object({
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    status: z.enum(['active', 'inactive']).optional(),
   }),
   response: {
     200: UserDto,
@@ -58,6 +61,24 @@ export const UserPatchSchema = {
   },
 } satisfies FastifySchema
 
+/** schema for: PATCH /api/users/:username */
+export const UserPatchSchema = {
+  params: z.object({
+    username: z.string(),
+  }),
+  body: z.object({
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+  }),
+  response: {
+    200: UserDto,
+    404: GeneralMessageDto,
+    409: GeneralMessageDto,
+    500: GeneralMessageDto,
+  },
+} satisfies FastifySchema
+
+/** schema for: DELETE /api/users/:id */
 export const UserDeleteSchema = {
   params: z.object({
     username: z.string(),
@@ -67,3 +88,21 @@ export const UserDeleteSchema = {
     404: GeneralMessageDto,
   },
 } satisfies FastifySchema
+
+// /api/users/:username/status
+// ----------------------------------------------------------------------------
+/** schema for: PATCH /api/users/:username/status */
+/*
+export const UserStatusPatchSchema = {
+  params: z.object({
+    username: z.string(),
+  }),
+  body: z.object({
+    status: z.enum(['active', 'inactive']),
+  }),
+  response: {
+    200: UserDto,
+    404: GeneralMessageDto,
+  },
+} satisfies FastifySchema
+// */

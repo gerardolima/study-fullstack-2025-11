@@ -1,29 +1,58 @@
-import {UsernameExistsError} from './user.error.ts'
-import {type User, type UserCreatePayload, type UserUpdatePayload} from './user.model.ts'
+import {type PaginateList} from '../../shared/pagination.ts'
+import {PageCurrentError, PageSizeError, UsernameExistsError} from './user.error.ts'
+import {type User} from './user.model.ts'
 
+type CreatePayload = Pick<User, 'username' | 'firstName' | 'lastName'>
+type UpdatePayload = Partial<Pick<User, 'firstName' | 'lastName' | 'status' | 'loginsCounter'>>
+
+/**
+ * In-memory data store for users
+ * Access to store should be done with Promises to simulate async database operations.
+ */
 const store = new Map<string, User>()
 
-/** Returns all users. */
-export function getAll(): User[] {
-  return structuredClone(Array.from(store.values()))
+/**
+ * Returns a paginated list of users.
+ * @throws PageCurrentError if pageCurrent is less than 1
+ * @throws PageSizeError if pageSize is less than 1
+ */
+export async function getAll(pageCurrent: number, pageSize: number): Promise<PaginateList<User>> {
+  if (pageCurrent < 1) throw new PageCurrentError(pageCurrent)
+  if (pageSize < 1) throw new PageSizeError(pageSize)
+
+  const users = await Promise.resolve(store.values())
+  const usersAsArray = Array.from(users)
+
+  const pageCount = Math.ceil(usersAsArray.length / pageSize)
+
+  const offset = (pageCurrent - 1) * pageSize
+  const limit = offset + pageSize
+  const list = structuredClone(usersAsArray.slice(offset, limit))
+
+  return {
+    list,
+    pageCurrent,
+    pageSize,
+    pageCount,
+  }
 }
 
 /**
  * Returns an user by username.
  * Returns undefined, when not found.
  */
-export function getByUsername(username: string): User | undefined {
-  return structuredClone(store.get(username))
+export async function getByUsername(username: string): Promise<User | undefined> {
+  const user = await Promise.resolve(store.get(username))
+  return structuredClone(user)
 }
 
 /**
  * Creates a new user in data store.
  * @throws Error when user with given username already exists.
  */
-export function create(data: UserCreatePayload): User {
-  if (store.has(data.username)) {
-    throw new UsernameExistsError(data.username)
-  }
+export async function create(data: CreatePayload): Promise<User> {
+  const existingUser = await Promise.resolve(store.get(data.username))
+  if (existingUser) throw new UsernameExistsError(data.username)
 
   const ts = new Date().toISOString()
 
@@ -34,19 +63,19 @@ export function create(data: UserCreatePayload): User {
     creationTime: ts,
     lastUpdateTime: ts,
   }
-  store.set(data.username, user)
+  await Promise.resolve(store.set(data.username, user))
 
-  return structuredClone(user)
+  return Promise.resolve(structuredClone(user))
 }
 
 /**
  * Updates an user and returns it.
  * @throws Error when user with given username does not exist.
  */
-export function update(username: string, data: UserUpdatePayload): User | undefined {
-  const user = store.get(username)
+export async function update(username: string, data: UpdatePayload): Promise<User | undefined> {
+  const user = await Promise.resolve(store.get(username))
   if (!user) {
-    return undefined
+    return Promise.resolve(undefined)
   }
 
   if (data.firstName !== undefined) user.firstName = data.firstName
@@ -56,15 +85,16 @@ export function update(username: string, data: UserUpdatePayload): User | undefi
 
   user.lastUpdateTime = new Date().toISOString()
 
-  return structuredClone(user)
+  return Promise.resolve(structuredClone(user))
 }
 
 /** Removes a user by username. */
-export function remove(username: string): boolean {
-  return store.delete(username)
+export async function remove(username: string): Promise<boolean> {
+  const res = await Promise.resolve(store.delete(username))
+  return Promise.resolve(res)
 }
 
 /** Removes all users. */
-export function clearAll(): void {
-  store.clear()
+export async function clearAll(): Promise<void> {
+  await Promise.resolve(store.clear())
 }

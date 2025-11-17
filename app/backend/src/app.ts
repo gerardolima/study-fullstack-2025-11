@@ -1,6 +1,6 @@
 import Fastify from 'fastify'
-import {userRoutes} from './modules/user/user.routes.ts'
 import {serializerCompiler, validatorCompiler} from 'fastify-type-provider-zod'
+import {userRoutes} from './modules/user/user.routes.ts'
 
 const app = Fastify({logger: true})
 
