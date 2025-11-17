@@ -41,6 +41,12 @@ const configSource =  {
       alphabetize: { order: 'asc' },
     }],
 
+    '@typescript-eslint/no-floating-promises': ['error', {
+      allowForKnownSafeCalls: [
+        { from: 'package', package: 'node:test', name: ['it', 'describe'] },
+      ],
+    }],
+
     'sort-imports': ['error', {      // enforce consistent ordering of imported symbols only
       'ignoreDeclarationSort': true, // allow for `import/order` to handle the order of imported modules
       'ignoreCase': true,
